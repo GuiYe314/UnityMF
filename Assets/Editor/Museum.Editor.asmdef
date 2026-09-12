@@ -1,0 +1,24 @@
+{
+    "name": "Museum.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:dc7ae8b9f7fc9bb4c80edfcdc5fad4a8",
+        "GUID:bc038132d2c1b324d97c70ce7430a3d6",
+        "GUID:c8114433bec5ae94d922cf3fcc7dd8e4",
+        "GUID:2373f786d14518f44b0f475db77ba4de",
+        "GUID:13ba8ce62aa80c74598530029cb2d649",
+        "GUID:e34a5702dd353724aa315fb8011f08c3",
+        "GUID:4d1926c9df5b052469a1c63448b7609a"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
