@@ -1,4 +1,4 @@
-using Microsoft.MixedReality.Toolkit.Input;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HotUpdate.Museum.N
@@ -8,8 +8,9 @@ namespace HotUpdate.Museum.N
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class ArtifactAutoRotation :
-        MonoBehaviour,
-        IMixedRealityFocusHandler
+        PointMessagingModuleBehaviour,
+        IPointMessageHandler<ArtifactRotationMessage>,
+        IPointMessageHandler<InteractionInputMessage>
     {
         [SerializeField]
         private Vector3 degreesPerSecond = new(0f, 30f, 0f);
@@ -17,15 +18,33 @@ namespace HotUpdate.Museum.N
         [SerializeField]
         private Space rotationSpace = Space.Self;
 
+        [Tooltip("用于接收移入/移出消息；为空时从父级自动查找。")]
+        [SerializeField]
+        private MuseumInteractionTarget interactionTarget;
+
         private bool running;
-        private bool hovered;
+        private bool manuallyPaused;
+        private readonly HashSet<InteractionSourceKey> hoverSources = new();
 
         public bool IsRunning => running;
-        public bool IsPaused => hovered;
+        public bool IsPaused => manuallyPaused || hoverSources.Count > 0;
+
+        public override void Initialize(MuseumPoint point)
+        {
+            base.Initialize(point);
+            if (interactionTarget == null)
+            {
+                interactionTarget =
+                    GetComponentInParent<MuseumInteractionTarget>();
+            }
+
+            Messages?.Subscribe<ArtifactRotationMessage>(this);
+            Messages?.Subscribe<InteractionInputMessage>(this);
+        }
 
         private void Update()
         {
-            if (!running || hovered)
+            if (!running || IsPaused)
             {
                 return;
             }
@@ -43,29 +62,72 @@ namespace HotUpdate.Museum.N
         public void StopRotation()
         {
             running = false;
-            hovered = false;
+            manuallyPaused = false;
+            hoverSources.Clear();
         }
 
         /// <summary>供 MRTK/其他输入适配器在移入时调用。</summary>
         public void NotifyHoverEnter()
         {
-            hovered = true;
+            manuallyPaused = true;
         }
 
         /// <summary>供 MRTK/其他输入适配器在移出时调用。</summary>
         public void NotifyHoverExit()
         {
-            hovered = false;
+            manuallyPaused = false;
         }
 
-        public void OnFocusEnter(FocusEventData eventData)
+        public void Handle(in ArtifactRotationMessage message)
         {
-            NotifyHoverEnter();
+            if (message.Point != Point ||
+                message.Scope == null ||
+                (transform != message.Scope &&
+                 !transform.IsChildOf(message.Scope)))
+            {
+                return;
+            }
+
+            if (message.Command == ArtifactRotationCommand.Start)
+            {
+                StartRotation();
+            }
+            else
+            {
+                StopRotation();
+            }
         }
 
-        public void OnFocusExit(FocusEventData eventData)
+        public void Handle(in InteractionInputMessage message)
         {
-            NotifyHoverExit();
+            if (interactionTarget == null ||
+                message.Target != interactionTarget)
+            {
+                return;
+            }
+
+            if (message.Phase == InteractionInputPhase.HoverEnter)
+            {
+                hoverSources.Add(message.Source);
+            }
+            else if (message.Phase == InteractionInputPhase.HoverExit)
+            {
+                hoverSources.Remove(message.Source);
+            }
+        }
+
+        public override void ExitPoint(PointExitReason reason)
+        {
+            StopRotation();
+        }
+
+        public override void Shutdown()
+        {
+            StopRotation();
+            Messages?.Unsubscribe<ArtifactRotationMessage>(this);
+            Messages?.Unsubscribe<InteractionInputMessage>(this);
+            interactionTarget = null;
+            base.Shutdown();
         }
 
         private void OnDisable()

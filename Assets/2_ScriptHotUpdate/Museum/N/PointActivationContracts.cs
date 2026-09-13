@@ -3,11 +3,6 @@ using UnityEngine;
 
 namespace HotUpdate.Museum.N
 {
-    public enum PointRunMode
-    {
-        Exclusive = 0,
-        Parallel = 1
-    }
 
     /// <summary>当前只实现 Distance，其他值为后续触发适配器保留。</summary>
     public enum PointActivationSourceType

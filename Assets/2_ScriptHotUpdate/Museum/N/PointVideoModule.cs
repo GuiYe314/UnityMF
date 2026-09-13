@@ -3,9 +3,9 @@ using UnityEngine.Video;
 
 namespace HotUpdate.Museum.N
 {
-    /// <summary>一个点位共用一个 VideoPlayer，每个 MuseumOption 只保存自己的 Clip。</summary>
+    /// <summary>一个点位共用一个 VideoPlayer，只处理 VideoMessage。</summary>
     [DisallowMultipleComponent]
-    public sealed class PointVideoModule : PointModuleBehaviour
+    public sealed class PointVideoModule : PointMessageModule<VideoMessage>
     {
         [SerializeField]
         private VideoPlayer videoPlayer;
@@ -80,6 +80,30 @@ namespace HotUpdate.Museum.N
             if (videoRoot != null)
             {
                 videoRoot.SetActive(false);
+            }
+        }
+
+        public override void Handle(in VideoMessage message)
+        {
+            if (message.Point != Point)
+            {
+                return;
+            }
+
+            switch (message.Command)
+            {
+                case VideoCommand.Play:
+                    Play(message.Clip);
+                    break;
+                case VideoCommand.Stop:
+                    StopAndHide();
+                    break;
+                case VideoCommand.Show:
+                    Show();
+                    break;
+                case VideoCommand.Hide:
+                    StopAndHide();
+                    break;
             }
         }
 

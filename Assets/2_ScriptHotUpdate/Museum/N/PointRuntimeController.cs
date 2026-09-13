@@ -16,12 +16,18 @@ namespace HotUpdate.Museum.N
         private List<PointModuleBehaviour> configuredModules = new();
 
         private readonly List<IPointModule> runtimeModules = new();
+        private readonly List<MuseumInteractionTarget> interactionTargets = new();
+        private readonly PointMessageBus messages = new();
         private MuseumPoint point;
         private bool initialized;
         private bool entered;
 
         public bool IsInitialized => initialized;
         public bool IsEntered => entered;
+        public MuseumPoint Owner => point;
+        public PointMessageBus Messages => messages;
+        public IReadOnlyList<MuseumInteractionTarget> InteractionTargets =>
+            interactionTargets;
 
         public void Initialize(MuseumPoint owner)
         {
@@ -32,10 +38,16 @@ namespace HotUpdate.Museum.N
 
             point = owner;
             BuildModuleList();
+            BuildTargetList();
 
             foreach (IPointModule module in runtimeModules)
             {
                 module.Initialize(point);
+            }
+
+            foreach (MuseumInteractionTarget target in interactionTargets)
+            {
+                target.Bind(point, messages);
             }
 
             initialized = true;
@@ -61,6 +73,12 @@ namespace HotUpdate.Museum.N
             {
                 module.EnterPoint();
             }
+
+            PointLifecycleMessage message = new(
+                point,
+                PointLifecyclePhase.Entered,
+                PointExitReason.NoTrigger);
+            messages.Publish(message);
         }
 
         public void ExitPoint(PointExitReason reason)
@@ -75,6 +93,12 @@ namespace HotUpdate.Museum.N
             {
                 runtimeModules[i].ExitPoint(reason);
             }
+
+            PointLifecycleMessage message = new(
+                point,
+                PointLifecyclePhase.Exited,
+                reason);
+            messages.Publish(message);
         }
 
         public void Shutdown()
@@ -86,14 +110,45 @@ namespace HotUpdate.Museum.N
 
             ExitPoint(PointExitReason.Shutdown);
 
+            foreach (MuseumInteractionTarget target in interactionTargets)
+            {
+                if (target != null)
+                {
+                    target.Unbind();
+                }
+            }
+
             for (int i = runtimeModules.Count - 1; i >= 0; i--)
             {
                 runtimeModules[i].Shutdown();
             }
 
+            messages.Clear();
+            interactionTargets.Clear();
             runtimeModules.Clear();
             point = null;
             initialized = false;
+        }
+
+        private void BuildTargetList()
+        {
+            interactionTargets.Clear();
+            if (point == null)
+            {
+                return;
+            }
+
+            MuseumInteractionTarget[] discovered =
+                point.GetComponentsInChildren<MuseumInteractionTarget>(true);
+            HashSet<MuseumInteractionTarget> uniqueTargets = new();
+
+            foreach (MuseumInteractionTarget target in discovered)
+            {
+                if (target != null && uniqueTargets.Add(target))
+                {
+                    interactionTargets.Add(target);
+                }
+            }
         }
 
         private void BuildModuleList()

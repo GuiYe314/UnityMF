@@ -5,7 +5,9 @@ namespace HotUpdate.Museum.N
 {
     /// <summary>管理一个点位下的所有文物组，任何时刻只保留选中项对应的组。</summary>
     [DisallowMultipleComponent]
-    public sealed class MuseumArtifactGroupModule : PointModuleBehaviour
+    public sealed class MuseumArtifactGroupModule :
+        PointMessagingModuleBehaviour,
+        IPointMessageHandler<ArtifactMessage>
     {
         [SerializeField]
         private GameObject artifactRoot;
@@ -24,11 +26,42 @@ namespace HotUpdate.Museum.N
         public override void Initialize(MuseumPoint point)
         {
             base.Initialize(point);
+            Messages?.Subscribe<ArtifactMessage>(this);
             CollectGroupsIfNeeded();
 
             if (hideOnInitialize)
             {
                 ClearSelection();
+            }
+        }
+
+        public void Handle(in ArtifactMessage message)
+        {
+            if (message.Point != Point)
+            {
+                return;
+            }
+
+            switch (message.Command)
+            {
+                case ArtifactCommand.Prepare:
+                    SelectGroup(message.ArtifactGroup);
+                    break;
+                case ArtifactCommand.Show:
+                    if (message.ArtifactGroup != null &&
+                        message.ArtifactGroup != selectedGroup)
+                    {
+                        SelectGroup(message.ArtifactGroup);
+                    }
+
+                    ShowSelected();
+                    break;
+                case ArtifactCommand.Hide:
+                    Hide();
+                    break;
+                case ArtifactCommand.Clear:
+                    ClearSelection();
+                    break;
             }
         }
 
@@ -41,7 +74,7 @@ namespace HotUpdate.Museum.N
             {
                 if (artifactGroup != null)
                 {
-                    artifactGroup.SetActive(artifactGroup == selectedGroup);
+                    artifactGroup.SetActive(false);
                 }
             }
 
@@ -64,11 +97,9 @@ namespace HotUpdate.Museum.N
                 artifactRoot.SetActive(true);
             }
 
-            foreach (ArtifactAutoRotation rotation in
-                     selectedGroup.GetComponentsInChildren<ArtifactAutoRotation>(true))
-            {
-                rotation.StartRotation();
-            }
+            PublishRotation(
+                ArtifactRotationCommand.Start,
+                selectedGroup.transform);
         }
 
         public void Hide()
@@ -103,11 +134,7 @@ namespace HotUpdate.Museum.N
             Transform searchRoot =
                 artifactRoot != null ? artifactRoot.transform : transform;
 
-            foreach (ArtifactAutoRotation rotation in
-                     searchRoot.GetComponentsInChildren<ArtifactAutoRotation>(true))
-            {
-                rotation.StopRotation();
-            }
+            PublishRotation(ArtifactRotationCommand.Stop, searchRoot);
         }
 
         public override void ExitPoint(PointExitReason reason)
@@ -118,7 +145,22 @@ namespace HotUpdate.Museum.N
         public override void Shutdown()
         {
             ClearSelection();
+            Messages?.Unsubscribe<ArtifactMessage>(this);
             base.Shutdown();
+        }
+
+        private void PublishRotation(
+            ArtifactRotationCommand command,
+            Transform scope)
+        {
+            if (Messages == null || Point == null || scope == null)
+            {
+                return;
+            }
+
+            ArtifactRotationMessage message =
+                new(Point, command, scope);
+            Messages.Publish(message);
         }
 
         private void CollectGroupsIfNeeded()

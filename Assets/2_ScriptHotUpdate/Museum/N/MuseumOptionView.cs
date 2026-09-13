@@ -4,18 +4,14 @@ using UnityEngine.Events;
 
 namespace HotUpdate.Museum.N
 {
-    public enum MuseumOptionVisualState
-    {
-        Normal = 0,
-        Hovered = 1,
-        Selected = 2
-    }
-
     /// <summary>
-    /// 单个可选展品的输入入口和视觉状态。Selected 始终覆盖 Hovered。
+    /// 单个可选展品的视觉模块。Selected 始终覆盖 Hovered。
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class MuseumOptionView : MonoBehaviour
+    public sealed class MuseumOptionView :
+        MonoBehaviour,
+        IPointMessageHandler<ModelVisualMessage>,
+        IPointMessageHandler<PointLifecycleMessage>
     {
         [SerializeField]
         private Transform scaleTarget;
@@ -54,8 +50,8 @@ namespace HotUpdate.Museum.N
         private readonly Dictionary<Renderer, MaterialPropertyBlock> originalBlocks =
             new();
 
-        private MuseumPointSelectionModule selection;
-        private int optionIndex = -1;
+        private MuseumInteractionTarget target;
+        private PointMessageBus messages;
         private Vector3 originalScale;
         private bool hovered;
         private bool selected;
@@ -66,10 +62,20 @@ namespace HotUpdate.Museum.N
         public bool IsSelected => selected;
         public bool IsHovered => hovered;
 
-        internal void Bind(MuseumPointSelectionModule owner, int index)
+        internal void Bind(
+            MuseumInteractionTarget owner,
+            PointMessageBus messageBus)
         {
-            selection = owner;
-            optionIndex = index;
+            if (target == owner && messages == messageBus)
+            {
+                return;
+            }
+
+            Unbind();
+            target = owner;
+            messages = messageBus;
+            messages?.Subscribe<ModelVisualMessage>(this);
+            messages?.Subscribe<PointLifecycleMessage>(this);
             CacheVisualState();
             SetSelected(false);
             SetHovered(false);
@@ -77,9 +83,11 @@ namespace HotUpdate.Museum.N
 
         internal void Unbind()
         {
+            messages?.Unsubscribe<ModelVisualMessage>(this);
+            messages?.Unsubscribe<PointLifecycleMessage>(this);
             RestoreOriginalVisuals();
-            selection = null;
-            optionIndex = -1;
+            messages = null;
+            target = null;
             hovered = false;
             selected = false;
         }
@@ -98,17 +106,54 @@ namespace HotUpdate.Museum.N
 
         public void NotifyHoverEnter()
         {
-            selection?.SetHovered(optionIndex, true);
+            target?.PublishInput(
+                InteractionInputPhase.HoverEnter,
+                new InteractionSourceKey(
+                    InteractionInputSourceType.Script,
+                    GetInstanceID()));
         }
 
         public void NotifyHoverExit()
         {
-            selection?.SetHovered(optionIndex, false);
+            target?.PublishInput(
+                InteractionInputPhase.HoverExit,
+                new InteractionSourceKey(
+                    InteractionInputSourceType.Script,
+                    GetInstanceID()));
         }
 
         public void NotifyClick()
         {
-            selection?.Select(optionIndex);
+            target?.PublishInput(
+                InteractionInputPhase.Click,
+                new InteractionSourceKey(
+                    InteractionInputSourceType.Script,
+                    GetInstanceID()));
+        }
+
+        public void Handle(in ModelVisualMessage message)
+        {
+            if (message.Target != target)
+            {
+                return;
+            }
+
+            selected = message.State == MuseumOptionVisualState.Selected;
+            hovered = message.State == MuseumOptionVisualState.Hovered;
+            RefreshVisualState();
+        }
+
+        public void Handle(in PointLifecycleMessage message)
+        {
+            if (target == null ||
+                message.Point != target.Point ||
+                message.Phase != PointLifecyclePhase.Exited)
+            {
+                return;
+            }
+
+            SetSelected(false);
+            SetHovered(false);
         }
 
         private void CacheVisualState()
@@ -236,7 +281,7 @@ namespace HotUpdate.Museum.N
 
         private void OnDestroy()
         {
-            RestoreOriginalVisuals();
+            Unbind();
         }
 
         private void OnValidate()

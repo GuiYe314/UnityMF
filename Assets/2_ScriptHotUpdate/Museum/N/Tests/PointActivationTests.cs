@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -109,6 +110,11 @@ namespace HotUpdate.Museum.N.Tests
 
                 MuseumPointCoordinator coordinator =
                     root.AddComponent<MuseumPointCoordinator>();
+                typeof(MuseumPointCoordinator)
+                    .GetField(
+                        "observer",
+                        BindingFlags.Instance | BindingFlags.NonPublic)
+                    ?.SetValue(coordinator, cameraObject.transform);
                 coordinator.Initialize();
 
                 Assert.That(pointA.IsEntered, Is.False);

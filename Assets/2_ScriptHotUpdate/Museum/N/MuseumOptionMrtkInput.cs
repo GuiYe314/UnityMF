@@ -8,36 +8,31 @@ namespace HotUpdate.Museum.N
     /// 它不参与点位进入仲裁；当前点位激活来源仍然只有距离触发。
     /// </summary>
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(MuseumOptionView))]
+    [RequireComponent(typeof(MuseumInteractionTarget))]
     public sealed class MuseumOptionMrtkInput :
-        MonoBehaviour,
+        TargetMessageInputBehaviour,
         IMixedRealityFocusHandler,
         IMixedRealityPointerHandler
     {
-        [SerializeField]
-        private MuseumOptionView optionView;
-
-        private void Awake()
-        {
-            if (optionView == null)
-            {
-                optionView = GetComponent<MuseumOptionView>();
-            }
-        }
-
         public void OnFocusEnter(FocusEventData eventData)
         {
-            optionView?.NotifyHoverEnter();
+            PublishInput(
+                InteractionInputPhase.HoverEnter,
+                InteractionInputSourceType.Mrtk);
         }
 
         public void OnFocusExit(FocusEventData eventData)
         {
-            optionView?.NotifyHoverExit();
+            PublishInput(
+                InteractionInputPhase.HoverExit,
+                InteractionInputSourceType.Mrtk);
         }
 
         public void OnPointerClicked(MixedRealityPointerEventData eventData)
         {
-            optionView?.NotifyClick();
+            PublishInput(
+                InteractionInputPhase.Click,
+                InteractionInputSourceType.Mrtk);
         }
 
         public void OnPointerDown(MixedRealityPointerEventData eventData)

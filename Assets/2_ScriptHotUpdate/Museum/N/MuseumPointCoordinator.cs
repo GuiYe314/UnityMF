@@ -24,6 +24,7 @@ namespace HotUpdate.Museum.N
         private List<MuseumPoint> configuredPoints = new();
 
         [Min(0.02f)]
+        [Tooltip("评估间隔。")]
         [SerializeField]
         private float evaluationInterval = 0.1f;
 
@@ -241,12 +242,10 @@ namespace HotUpdate.Museum.N
 
         private void Reconcile()
         {
-            ReconcileParallelPoints();
-
             HashSet<string> groups = new(StringComparer.Ordinal);
             foreach (MuseumPoint point in points)
             {
-                if (point != null && point.RunMode == PointRunMode.Exclusive)
+                if (point != null)
                 {
                     groups.Add(point.InteractionGroup);
                 }
@@ -289,26 +288,6 @@ namespace HotUpdate.Museum.N
             }
         }
 
-        private void ReconcileParallelPoints()
-        {
-            foreach (MuseumPoint point in points)
-            {
-                if (point == null || point.RunMode != PointRunMode.Parallel)
-                {
-                    continue;
-                }
-
-                if (activations.HasAny(point))
-                {
-                    point.EnterPoint();
-                }
-                else
-                {
-                    point.ExitPoint(PointExitReason.NoTrigger);
-                }
-            }
-        }
-
         private MuseumPoint FindExclusiveWinner(
             string group,
             MuseumPoint previous)
@@ -318,7 +297,6 @@ namespace HotUpdate.Museum.N
             foreach (MuseumPoint candidate in points)
             {
                 if (candidate == null ||
-                    candidate.RunMode != PointRunMode.Exclusive ||
                     !string.Equals(
                         candidate.InteractionGroup,
                         group,

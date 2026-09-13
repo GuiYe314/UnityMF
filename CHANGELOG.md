@@ -6,7 +6,9 @@
 
 ### Added
 
-- 在 Assets/2_ScriptHotUpdate/Museum/N 增加第一版模块化点位交互框架：距离滞回触发、同点多来源聚合接口、相邻点位仲裁、同组互斥/并行运行模式及统一 Enter/Exit/Shutdown 生命周期。
+- Museum/N 增加强类型 PointMessageBus、输入适配器基类、InteractionTarget，以及 VideoMessage、ModelVisualMessage、ArtifactMessage 等可扩展消息契约。
+- 增加 ObjectSwitchModule 和 ObjectDisplayMessageInput，支持按钮在两个物体间切换、其他来源临时覆盖、按优先级仲裁及释放后恢复基础状态。
+- 在 Assets/2_ScriptHotUpdate/Museum/N 增加第一版模块化点位交互框架：距离滞回触发、同点多来源聚合接口、相邻点位分组仲裁及统一 Enter/Exit/Shutdown 生命周期。
 - 增加展品 Normal/Hovered/Selected 状态、单选合集、共享视频播放器、视频/文物切换、文物旋转暂停恢复和可组合 MuseumOptionAction。
 - 增加 Museum/N 的 EditMode 与 PlayMode 测试程序集，覆盖距离滞回、重复来源、多个来源延迟退出、相邻点位切换和运行时退出通知。
 - 建立 `AGENTS.md`、`README.md` 和架构文档，作为跨电脑、跨 Codex 会话的长期开发上下文。
@@ -14,6 +16,9 @@
 
 ### Fixed
 
+- 移除 MuseumPointSelectionModule 对视频、文物和切换按钮的直接依赖，避免点位展示流程变化时修改单选核心。
+- 修正移除 PointRunMode 后仍先并行进入全部点位的问题，同一 interactionGroup 继续只保留仲裁胜出的点位。
+- 修正文物准备阶段在缺少 artifactRoot 时过早显示，以及多输入来源 Hover 中任一来源退出就提前恢复旋转的问题。
 - 将 `Assets/Scenes/Root.unity` 加入 Build Settings，避免 HybridCLR 临时 Player 构建因无场景而失败。
 - 将 HybridCLR/YooAsset 编辑器工具的旧 `Assets/Museum/...` 路径和 `Museum.HotUpdate` 程序集名对齐到当前资产布局与 `HotUpdate` 程序集。
 - 在 HybridCLR staging 与 YooAsset 构建之间强制完成资产导入，避免一键构建因导入尚未结束而失败。
@@ -37,7 +42,5 @@
 - 编辑器内 HybridCLR 配置校验、DLL 整理、YooAsset 构建及本地发布工具。
 - 内置 `MuseumPackage` StreamingAssets 内容包。
 
-[Unreleased]: https://github.com/OWNER/REPOSITORY/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/OWNER/REPOSITORY/releases/tag/v0.1.0
-
-> 配置 GitHub 远程后，将以上占位链接替换为真实仓库地址。
+[Unreleased]: https://github.com/GuiYe314/UnityMF/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/GuiYe314/UnityMF/releases/tag/v0.1.0

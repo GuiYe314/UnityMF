@@ -6,20 +6,17 @@ namespace HotUpdate.Museum.N
     {
         public MuseumOptionContext(
             MuseumPoint point,
-            MuseumPointSelectionModule selection,
-            MuseumOption option,
-            int optionIndex)
+            MuseumInteractionTarget target,
+            PointMessageBus messages)
         {
             Point = point;
-            Selection = selection;
-            Option = option;
-            OptionIndex = optionIndex;
+            Target = target;
+            Messages = messages;
         }
 
         public MuseumPoint Point { get; }
-        public MuseumPointSelectionModule Selection { get; }
-        public MuseumOption Option { get; }
-        public int OptionIndex { get; }
+        public MuseumInteractionTarget Target { get; }
+        public PointMessageBus Messages { get; }
     }
 
     /// <summary>

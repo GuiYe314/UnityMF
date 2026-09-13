@@ -7,11 +7,9 @@ namespace HotUpdate.Museum.N
     [DisallowMultipleComponent]
     public sealed class MuseumPoint : MonoBehaviour
     {
+        [Tooltip("不填就使用物体名称。")]
         [SerializeField]
         private string pointId;
-
-        [SerializeField]
-        private PointRunMode runMode = PointRunMode.Exclusive;
 
         [SerializeField]
         private string interactionGroup = "Default";
@@ -19,10 +17,6 @@ namespace HotUpdate.Museum.N
         [Tooltip("同来源类型下数值越大优先级越高。")]
         [SerializeField]
         private int priority;
-
-        [Tooltip("用于仲裁距离；为空时使用当前 Transform。")]
-        [SerializeField]
-        private Transform distanceAnchor;
 
         [SerializeField]
         private PointRuntimeController runtimeController;
@@ -34,8 +28,6 @@ namespace HotUpdate.Museum.N
 
         public string PointId =>
             string.IsNullOrWhiteSpace(pointId) ? gameObject.name : pointId;
-
-        public PointRunMode RunMode => runMode;
 
         public string InteractionGroup =>
             string.IsNullOrWhiteSpace(interactionGroup) ? "Default" : interactionGroup;
@@ -95,8 +87,7 @@ namespace HotUpdate.Museum.N
 
         internal void UpdateDistance(Vector3 observerPosition)
         {
-            Transform anchor = distanceAnchor != null ? distanceAnchor : transform;
-            DistanceToObserver = Vector3.Distance(observerPosition, anchor.position);
+            DistanceToObserver = Vector3.Distance(observerPosition, transform.position);
         }
 
         private void OnValidate()

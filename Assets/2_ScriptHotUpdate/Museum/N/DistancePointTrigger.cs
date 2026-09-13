@@ -11,10 +11,6 @@ namespace HotUpdate.Museum.N
         [SerializeField]
         private MuseumPoint point;
 
-        [Tooltip("为空时使用当前 Transform。")]
-        [SerializeField]
-        private Transform distanceAnchor;
-
         [Min(0f)]
         [SerializeField]
         private float enterDistance = 3f;
@@ -63,8 +59,7 @@ namespace HotUpdate.Museum.N
                 return;
             }
 
-            Transform anchor = distanceAnchor != null ? distanceAnchor : transform;
-            float distance = Vector3.Distance(observerPosition, anchor.position);
+            float distance = Vector3.Distance(observerPosition, transform.position);
             DistanceActivationChange change =
                 gate.Evaluate(distance, enterDistance, exitDistance);
 
@@ -118,7 +113,7 @@ namespace HotUpdate.Museum.N
 
         private void OnDrawSelected()
         {
-            Transform anchor = distanceAnchor != null ? distanceAnchor : transform;
+            Transform anchor = transform;
 
             Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(anchor.position, enterDistance);

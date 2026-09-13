@@ -75,20 +75,24 @@ Museum/N 是旧 Museum/Point 的并行替代实现，当前不自动迁移旧预
 DistancePointTrigger
   -> MuseumPointCoordinator
        -> 同一点位触发来源聚合
-       -> 同组互斥/并行仲裁
+       -> 同组点位仲裁
        -> MuseumPoint
             -> PointRuntimeController
-                 -> MuseumPointSelectionModule
-                 -> PointVideoModule
-                 -> MuseumArtifactGroupModule
-                 -> MuseumOptionAction
+                 -> 点位私有 PointMessageBus
+                      -> InputAdapter 发布原始输入消息
+                      -> SelectionModule 发布选择事实
+                      -> PresentationModule 发布业务命令
+                      -> Video / Visual / Artifact / Rotation 模块
 ~~~
 
 - DistancePointTrigger 使用独立进入和退出距离形成滞回区间，避免边界抖动；由 Coordinator 统一轮询，点位数量增加时不需要每个触发器各自 Update。
 - PointActivationRegistry 以“来源类型 + 来源实例”记录有效来源。同一点位未来同时被距离、碰撞和手势触发时，只有最后一个来源退出才关闭点位。
-- Exclusive 点位按 interactionGroup 仲裁，默认选择来源优先级更高、点位优先级更高、距离更近的候选；切换时先退出旧点位。Parallel 点位可独立并行。
-- PointRuntimeController 自动收集 IPointModule，按初始化顺序进入、逆序退出。视频停止、文物旋转停止、选中清空、按钮隐藏及扩展技能清理由统一 ExitPoint 触发。
-- MuseumPointSelectionModule 用一条 MuseumOption 同时保存展品 View、VideoClip、文物组和扩展 Actions；选中状态优先于移入状态，因此选中物体移出后仍保持高亮和缩放。
+- 点位按 interactionGroup 仲裁，默认选择来源优先级更高、点位优先级更高、距离更近的候选；同组只保留一个，使用不同 Group 可让点位同时运行。
+- PointRuntimeController 自动收集 IPointModule 和 MuseumInteractionTarget，拥有每点位独立的 PointMessageBus；按初始化顺序进入、逆序退出，最后发布生命周期消息。
+- 输入适配器只发布 InteractionInputMessage，不引用业务模块。MuseumPointSelectionModule 只负责单选并发布 OptionSelectionChangedMessage；可选 Presentation 模块再把事实转换为 VideoMessage、ModelVisualMessage、ArtifactMessage 等强类型命令。
+- MuseumInteractionTarget 集中保存目标 ID、View、VideoClip、文物组和扩展 Actions；MuseumOptionView 只处理 ModelVisualMessage。选中状态优先于移入状态，因此选中物体移出后仍保持高亮和缩放。
+- ObjectSwitchModule 是一对互斥物体的唯一状态所有者；按钮修改基础状态，其他来源可用带来源 ID 和优先级的临时覆盖，释放后恢复基础状态，避免多个脚本争用 SetActive。
+- 消息不替代安全生命周期。视频停止、文物旋转停止、选中清空、按钮隐藏和临时覆盖清理由统一 ExitPoint 强制执行；Hover 等持续输入按来源键聚合，最后一个来源退出后才恢复状态。
 - 碰撞、手势和手动点位触发尚未实现；后续适配器只调用 Coordinator 的 ReportEnter/ReportExit，不进入视频、UI 或文物业务模块。
 
 具体预制体挂载方法见 Assets/2_ScriptHotUpdate/Museum/N/README.md。
@@ -111,6 +115,7 @@ DistancePointTrigger
 5. **内容版本不可变**：同一版本号始终对应同一份清单，发布工具拒绝覆盖旧目录。
 6. **平台产物隔离**：HybridCLR 热更/AOT 元数据按 Active Build Target 生成，不跨平台复用。
 7. **仓库是上下文真源**：规则、架构、构建方式、已知问题和设计决定写入版本控制，不依赖 Codex 对话。
+8. **点位消息局部化与强类型化**：输入、业务事实和功能命令使用独立消息结构；每个点位独享消息总线，不使用全局静态事件。状态由单一模块拥有，多来源通过来源键和优先级仲裁。
 
 ## 待决策事项
 
