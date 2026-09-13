@@ -172,7 +172,7 @@ namespace HotUpdate.Point
             //当前点位
             PointBase pointBase = null;
 
-            //只有一个怎直接选中
+            //只有一个直接选中
             if (detectedPoint.Count < 2) {
 
                 pointBase = pointBases[0];

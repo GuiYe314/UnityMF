@@ -232,9 +232,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1651152571}
     m_Modifications:
+    - target: {fileID: 1312857484419532160, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+      propertyPath: _actionClips.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3850536670970751259, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
       propertyPath: m_Name
       value: Point01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4554684161545954238, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+      propertyPath: _referenceMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4554684161545954238, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+      propertyPath: _initialCoordinates
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6175128390925794310, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
       propertyPath: ModelPath
@@ -280,16 +292,73 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8720296406303603364, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+      propertyPath: groups.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8720296406303603364, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+      propertyPath: groups.Array.data[2]
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6175128390925794310, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+    - {fileID: 8578117749071502613, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3850536670970751259, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 439432249}
   m_SourcePrefab: {fileID: 100100000, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
 --- !u!4 &439432244 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7676744407552326945, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
   m_PrefabInstance: {fileID: 439432243}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &439432245 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8720296406303603364, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+  m_PrefabInstance: {fileID: 439432243}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fa33787113f32d46a7764fa0670964b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &439432246 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 826705574226624382, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+  m_PrefabInstance: {fileID: 439432243}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &439432247 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7381518444416365680, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+  m_PrefabInstance: {fileID: 439432243}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &439432248 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3850536670970751259, guid: d0c9cb89845de324f8fc7fbaa1c4f8b7, type: 3}
+  m_PrefabInstance: {fileID: 439432243}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &439432249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 439432248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 327d26fb3cc801945a01bbdb986e123e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assetPath: Models/Points01_LoadMode
+  _pointModel: {fileID: 439432247}
+  _pointExecution: {fileID: 439432246}
+  _pointCutscene: {fileID: 439432245}
+  _Distance: 3
+  _DistanceExit: 5
 --- !u!1 &824290834
 GameObject:
   m_ObjectHideFlags: 0
@@ -645,10 +714,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1651152570}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b74f977509b5ccd4fa0c870661da1411, type: 3}
+  m_Script: {fileID: 11500000, guid: 38e0926581100014ba4b3499918305af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetCamera: {fileID: 1864508504}
   inspectionFrequency: 0.1
   instantiationDistance: 8
   maxInstantiationDistance: 12

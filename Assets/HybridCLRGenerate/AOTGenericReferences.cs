@@ -19,10 +19,10 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 
 	// {{ AOT generic types
 	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask.<>c<DistanceFollowing.<Run>d__5>
-	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask.<>c<HotUpdate.Point.MuseumPointsController.<UnpdataPoint>d__13>
+	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask.<>c<HotUpdate.Point.MuseumPointsController.<UpdatePoint>d__13>
 	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask.<>c<NMRTKMoveObject.<Run>d__9>
 	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask<DistanceFollowing.<Run>d__5>
-	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask<HotUpdate.Point.MuseumPointsController.<UnpdataPoint>d__13>
+	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask<HotUpdate.Point.MuseumPointsController.<UpdatePoint>d__13>
 	// Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask<NMRTKMoveObject.<Run>d__9>
 	// Cysharp.Threading.Tasks.ITaskPoolNode<object>
 	// Cysharp.Threading.Tasks.UniTaskCompletionSourceCore<Cysharp.Threading.Tasks.AsyncUnit>
@@ -99,10 +99,10 @@ public class AOTGenericReferences : UnityEngine.MonoBehaviour
 	{
 		// System.Threading.Tasks.Task<object> AOT.HotUpdate.Experience.IContentAssetProvider.LoadAsync<object>(string,System.Threading.CancellationToken)
 		// System.Void Cysharp.Threading.Tasks.CompilerServices.AsyncUniTaskMethodBuilder.AwaitUnsafeOnCompleted<Cysharp.Threading.Tasks.UniTask.Awaiter,DistanceFollowing.<Run>d__5>(Cysharp.Threading.Tasks.UniTask.Awaiter&,DistanceFollowing.<Run>d__5&)
-		// System.Void Cysharp.Threading.Tasks.CompilerServices.AsyncUniTaskMethodBuilder.AwaitUnsafeOnCompleted<Cysharp.Threading.Tasks.UniTask.Awaiter,HotUpdate.Point.MuseumPointsController.<UnpdataPoint>d__13>(Cysharp.Threading.Tasks.UniTask.Awaiter&,HotUpdate.Point.MuseumPointsController.<UnpdataPoint>d__13&)
+		// System.Void Cysharp.Threading.Tasks.CompilerServices.AsyncUniTaskMethodBuilder.AwaitUnsafeOnCompleted<Cysharp.Threading.Tasks.UniTask.Awaiter,HotUpdate.Point.MuseumPointsController.<UpdatePoint>d__13>(Cysharp.Threading.Tasks.UniTask.Awaiter&,HotUpdate.Point.MuseumPointsController.<UpdatePoint>d__13&)
 		// System.Void Cysharp.Threading.Tasks.CompilerServices.AsyncUniTaskMethodBuilder.AwaitUnsafeOnCompleted<Cysharp.Threading.Tasks.UniTask.Awaiter,NMRTKMoveObject.<Run>d__9>(Cysharp.Threading.Tasks.UniTask.Awaiter&,NMRTKMoveObject.<Run>d__9&)
 		// System.Void Cysharp.Threading.Tasks.CompilerServices.AsyncUniTaskMethodBuilder.Start<DistanceFollowing.<Run>d__5>(DistanceFollowing.<Run>d__5&)
-		// System.Void Cysharp.Threading.Tasks.CompilerServices.AsyncUniTaskMethodBuilder.Start<HotUpdate.Point.MuseumPointsController.<UnpdataPoint>d__13>(HotUpdate.Point.MuseumPointsController.<UnpdataPoint>d__13&)
+		// System.Void Cysharp.Threading.Tasks.CompilerServices.AsyncUniTaskMethodBuilder.Start<HotUpdate.Point.MuseumPointsController.<UpdatePoint>d__13>(HotUpdate.Point.MuseumPointsController.<UpdatePoint>d__13&)
 		// System.Void Cysharp.Threading.Tasks.CompilerServices.AsyncUniTaskMethodBuilder.Start<NMRTKMoveObject.<Run>d__9>(NMRTKMoveObject.<Run>d__9&)
 		// object DG.Tweening.TweenSettingsExtensions.OnComplete<object>(object,DG.Tweening.TweenCallback)
 		// object DG.Tweening.TweenSettingsExtensions.SetEase<object>(object,DG.Tweening.Ease)

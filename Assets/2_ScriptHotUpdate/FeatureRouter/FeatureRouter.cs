@@ -1,5 +1,6 @@
 using AOT.HotUpdate.Experience;
 using AOT.HotUpdate.Framework;
+using HotUpdate.Museum.Manager;
 using HotUpdate.Point;
 using System;
 using System.Collections;
@@ -26,7 +27,7 @@ namespace HotUpdate.Experience
         // 地址来自场景收集器的 MuseumRelativeAddressRule。
         public const string ExperienceSceneAddress = "museum";
 
-        private MuseumPointsController museumPointsController = null;
+        private PointsManager pointsManager = null;
 
         public FeatureRouter(
        IServiceRegistry serviceRegistry,
@@ -52,8 +53,8 @@ namespace HotUpdate.Experience
             try
             {
                 //获取点位控制器。所有点位控制
-                museumPointsController = GameObject.FindObjectOfType<MuseumPointsController>();
-                museumPointsController.Initialize(serviceRegistry);
+                pointsManager = GameObject.FindObjectOfType<PointsManager>();
+                pointsManager.Initialize(serviceRegistry);
             }
             catch (Exception e)
             {
@@ -68,7 +69,7 @@ namespace HotUpdate.Experience
         public async Task ExitCurrentFeatureAsync(CancellationToken cancellationToken)
         {
 
-            museumPointsController.Shutdown();
+            pointsManager.Shutdown();
 
             await sceneLoader.UnloadSceneAsync(
                 ExperienceSceneAddress,

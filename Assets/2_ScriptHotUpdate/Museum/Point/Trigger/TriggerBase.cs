@@ -10,6 +10,8 @@ namespace HotUpdate.Point
     public class TriggerBase : MonoBehaviour
     {
 
+
+
         /// <summary>
         /// 互动
         /// </summary>

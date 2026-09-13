@@ -1,5 +1,7 @@
 
+using HotUpdate.Museum.Input;
 using Microsoft.MixedReality.Toolkit.Input;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,6 +47,9 @@ namespace HotUpdate.Point
         }
 
 
+        
+
+
 
         public void OnFocusEnter(FocusEventData eventData)
         {
@@ -81,5 +86,8 @@ namespace HotUpdate.Point
             OnTrigger?.Invoke(InputRoutingSignal.Up, gameObject, subsequence);
         }
     }
+
+
+
 
 }
