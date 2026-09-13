@@ -6,6 +6,9 @@
 
 ### Added
 
+- 在 Assets/2_ScriptHotUpdate/Museum/N 增加第一版模块化点位交互框架：距离滞回触发、同点多来源聚合接口、相邻点位仲裁、同组互斥/并行运行模式及统一 Enter/Exit/Shutdown 生命周期。
+- 增加展品 Normal/Hovered/Selected 状态、单选合集、共享视频播放器、视频/文物切换、文物旋转暂停恢复和可组合 MuseumOptionAction。
+- 增加 Museum/N 的 EditMode 与 PlayMode 测试程序集，覆盖距离滞回、重复来源、多个来源延迟退出、相邻点位切换和运行时退出通知。
 - 建立 `AGENTS.md`、`README.md` 和架构文档，作为跨电脑、跨 Codex 会话的长期开发上下文。
 - 增加标准 Unity Git 忽略规则，隔离 Library、Temp、Logs、构建、本机 IDE 数据及生成的 `Assets/StreamingAssets/yoo/` 内容包。
 
@@ -19,7 +22,7 @@
 ### Known issues
 
 - YooAsset 包依赖使用 `D:/Software/...` 本机绝对路径。
-- 尚无项目自有自动化测试。
+- 除 Museum/N 新点位模块外，其他模块尚无项目自有自动化测试。
 - Unity 生成的解决方案含重复 `Unity.Timeline` 项目名，MSBuild 无法加载。
 
 ## [0.1.0] - 2026-09-12

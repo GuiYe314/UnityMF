@@ -67,6 +67,32 @@ Unity Player / Root 场景
 
 编辑器构建工具的路径必须与 `Assets/Scenes`、`Assets/2_ScriptHotUpdate` 和 `Assets/3_ResourceFile` 的当前布局保持一致；任何目录重组都要同步验证发布链路。
 
+## Museum/N 模块化点位交互
+
+Museum/N 是旧 Museum/Point 的并行替代实现，当前不自动迁移旧预制体。第一阶段只实现点位级距离触发，内部展品仍通过 MRTK 处理移入、移出和点击。
+
+~~~text
+DistancePointTrigger
+  -> MuseumPointCoordinator
+       -> 同一点位触发来源聚合
+       -> 同组互斥/并行仲裁
+       -> MuseumPoint
+            -> PointRuntimeController
+                 -> MuseumPointSelectionModule
+                 -> PointVideoModule
+                 -> MuseumArtifactGroupModule
+                 -> MuseumOptionAction
+~~~
+
+- DistancePointTrigger 使用独立进入和退出距离形成滞回区间，避免边界抖动；由 Coordinator 统一轮询，点位数量增加时不需要每个触发器各自 Update。
+- PointActivationRegistry 以“来源类型 + 来源实例”记录有效来源。同一点位未来同时被距离、碰撞和手势触发时，只有最后一个来源退出才关闭点位。
+- Exclusive 点位按 interactionGroup 仲裁，默认选择来源优先级更高、点位优先级更高、距离更近的候选；切换时先退出旧点位。Parallel 点位可独立并行。
+- PointRuntimeController 自动收集 IPointModule，按初始化顺序进入、逆序退出。视频停止、文物旋转停止、选中清空、按钮隐藏及扩展技能清理由统一 ExitPoint 触发。
+- MuseumPointSelectionModule 用一条 MuseumOption 同时保存展品 View、VideoClip、文物组和扩展 Actions；选中状态优先于移入状态，因此选中物体移出后仍保持高亮和缩放。
+- 碰撞、手势和手动点位触发尚未实现；后续适配器只调用 Coordinator 的 ReportEnter/ReportExit，不进入视频、UI 或文物业务模块。
+
+具体预制体挂载方法见 Assets/2_ScriptHotUpdate/Museum/N/README.md。
+
 ## 外部服务和系统接口
 
 - YooAsset：资源包、Manifest、缓存、下载器和场景加载接口。
@@ -91,6 +117,6 @@ Unity Player / Root 场景
 - 选择可移植的 YooAsset 依赖方式（仓库内 package、固定 commit 的 Git URL 或私有 registry）。
 - 统一 `Assets/Museum/...` 与现有 `Assets/Scenes`、`Assets/3_ResourceFile` 布局，并迁移编辑器常量与序列化引用。
 - 明确 Player 启动场景、目标平台、输出目录和 CI 构建入口。
-- 建立框架 EditMode 测试与更新/场景流程 PlayMode 测试。
+- 将现有 Museum/N 测试模式扩展到框架、资源更新和场景流程。
 - 决定大型二进制资源、第三方源码和预构建 Bundles 的 Git LFS/发布制品策略。
 - `HybridCLRData/` 作为可重建本机数据保持忽略；第三方来源由包配置和初始化步骤追踪。

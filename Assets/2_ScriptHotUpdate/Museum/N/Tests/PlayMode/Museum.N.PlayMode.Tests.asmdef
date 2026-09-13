@@ -1,0 +1,19 @@
+{
+    "name": "Museum.N.PlayMode.Tests",
+    "rootNamespace": "HotUpdate.Museum.N.Tests",
+    "references": [
+        "HotUpdate"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false,
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ]
+}

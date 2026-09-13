@@ -5,6 +5,7 @@ UnitySY 是一个面向博物馆/展陈混合现实体验的 Unity 工程。它�
 ## 主要功能
 
 - 博物馆点位触发：碰撞、距离、MRTK 输入与按钮路由。
+- Museum/N 提供新的模块化点位方案：距离滞回触发、相邻点位仲裁、明确的展品选中状态，以及视频、文物和旋转的统一退出生命周期。
 - 点位动作：物体显隐、自动旋转、缩放、材质闪烁和视频播放。
 - MR 相机/物体跟随与交互控制。
 - AOT 模块宿主、服务注册和资源更新状态机。
@@ -65,7 +66,7 @@ $Unity = 'C:\Program Files\Unity 2022.3.10f1\Editor\Unity.exe'
 
 ## 测试
 
-Unity Test Framework 已安装，但当前没有项目自有测试程序集或用例。标准命令如下：
+Unity Test Framework 已安装。Museum/N 当前有 `Museum.N.Tests`（EditMode）和 `Museum.N.PlayMode.Tests`（PlayMode）两个测试程序集；全项目标准命令如下：
 
 ```powershell
 & $Unity -batchmode -quit -projectPath (Get-Location) -runTests -testPlatform EditMode -testResults .\Artifacts\editmode-results.xml -logFile .\Artifacts\editmode.log
@@ -93,9 +94,10 @@ Unity Test Framework 已安装，但当前没有项目自有测试程序集或�
 - YooAsset 本地绝对路径导致跨电脑包恢复失败。
 - 编辑器构建路径已对齐当前 `Assets/Scenes`、`Assets/2_ScriptHotUpdate` 和 `Assets/3_ResourceFile` 布局。
 - Build Settings 已将 `Assets/Scenes/Root.unity` 配置为启动场景。
-- 没有项目自有自动化测试。
+- 除 Museum/N 外，其他业务模块仍没有项目自有自动化测试。
+- Museum/N 已新增独立 EditMode/PlayMode 测试，但新方案尚未迁移现有 SmallModel 预制体；挂载步骤见 Assets/2_ScriptHotUpdate/Museum/N/README.md。
 - `UnitySY.sln` 当前含两个同名 `Unity.Timeline` 项目，不能直接用 `dotnet build UnitySY.sln`；应以 Unity 编译/测试为准并重新生成解决方案。
 - `HybridCLRData/` 含可重建产物和第三方嵌套仓库，已整体忽略；新电脑必须按 HybridCLR 配置流程重新生成。
-- 本仓库初始化时尚未配置 GitHub 远程；获得明确仓库地址后再添加并推送。
+- GitHub 远程已配置为 `origin`（`https://github.com/GuiYe314/UnityMF.git`）；推送前仍须检查暂存区，避免带入本机数据或无关修改。
 
 更多模块关系和发布流程见 `docs/ARCHITECTURE.md`，长期开发规则见 `AGENTS.md`。

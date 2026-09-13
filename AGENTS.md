@@ -24,7 +24,7 @@
 - YooAsset 包：`Museum > Build > 3. Build YooAsset Package`。
 - 全量内容构建：`Museum > Build > 4. Build All For Active Target`。
 - 命令行等价入口：`Unity.exe -batchmode -quit -projectPath <仓库> -executeMethod <完整方法名> -logFile <日志路径>`；完整方法名见 README。
-- 测试：`Unity.exe -batchmode -quit -projectPath <仓库> -runTests -testPlatform EditMode -testResults <结果.xml> -logFile <日志>`，再运行 PlayMode。当前没有项目自有测试，新增/修改功能必须补齐对应测试程序集与用例。
+- 测试：`Unity.exe -batchmode -quit -projectPath <仓库> -runTests -testPlatform EditMode -testResults <结果.xml> -logFile <日志>`，再运行 PlayMode。Museum/N 已有独立测试程序集；其他功能新增或修改时仍必须补齐对应测试。
 
 ## 修改功能必须遵守
 
@@ -49,7 +49,7 @@
 - `Packages/manifest.json` 的 YooAsset 使用 `D:/Software/...` 绝对路径，跨电脑不可恢复；应改为仓库内包、可访问的 Git/registry 依赖，或在新电脑上按 README 修复。
 - `MuseumContentBuildPipeline`、`UpdateSceneBuilder` 与 HybridCLR 配置入口必须持续使用当前 `Assets/Scenes`、`Assets/2_ScriptHotUpdate`、`Assets/3_ResourceFile` 布局；重组目录时必须同步更新并验证这些常量。
 - `ProjectSettings/EditorBuildSettings.asset` 当前以 `Assets/Scenes/Root.unity` 为启动场景；修改启动流程时必须同步验证该配置。
-- 当前没有项目自有 EditMode/PlayMode 测试。
+- 当前仅 Museum/N 有项目自有 EditMode/PlayMode 测试，其他模块仍缺少自动化覆盖。
 - `UnitySY.sln` 有重复的 `Unity.Timeline` 项目名，当前不能作为可靠的 `dotnet build` 入口；应由 Unity 重新生成并以 Unity 编译结果为准。
 - `HybridCLRData/` 是可重建的本机目录并含第三方嵌套仓库，必须保持忽略；需要时通过 HybridCLR 配置/生成流程恢复。
 - 仓库初始体积可能较大，包含 MRTK、SLATE、预构建 StreamingAssets 与 HybridCLR 数据；初始化远程前检查许可证和 GitHub 单文件/仓库大小限制。
