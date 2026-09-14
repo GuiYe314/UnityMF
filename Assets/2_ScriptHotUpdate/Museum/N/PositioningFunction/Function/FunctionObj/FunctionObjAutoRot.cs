@@ -7,6 +7,8 @@ using static FunctionEnum;
 
 namespace HotUpdate.Museum.Function
 {
+
+    [DisallowMultipleComponent]
     public class FunctionObjAutoRot : FunctionBases
     {
 
@@ -22,6 +24,25 @@ namespace HotUpdate.Museum.Function
         [SerializeField]
         protected Space rotationSpace = Space.Self;
 
+
+        public override void Open(FunctionDataContext functionBasesData)
+        {
+            base.Open(functionBasesData);
+
+            switch (functionBasesData.eventName)
+            {
+                case Input.FunctionEventName.FunctionObjAutoRot_AutoRotOpen:
+                    FunctionObjAutoRotOpen();
+                    break;
+                case Input.FunctionEventName.FunctionObjAutoRot_AutoRotClose:
+                    FunctionObjAutoRotClose();
+                    break;
+                default:
+                    break;
+            }
+
+
+        }
 
         protected void FunctionObjAutoRotOpen()
         {

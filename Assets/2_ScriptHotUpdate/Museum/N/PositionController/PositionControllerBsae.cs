@@ -1,5 +1,6 @@
 using AOT.HotUpdate.Experience;
 using AOT.HotUpdate.Framework;
+using HotUpdate.Museum.Function;
 using Slate;
 using System;
 using System.Collections;
@@ -73,6 +74,9 @@ namespace HotUpdate.Museum.Controller
         protected IContentAssetProvider contentAssetProvider = null;
         protected CancellationToken cancellationToken = new();
 
+
+        protected FunctionControlBase[] functionControlBases;
+
         public virtual void Initialize(IServiceRegistry serviceRegistry)
         {
             distanceToCamera = 999999;
@@ -119,8 +123,17 @@ namespace HotUpdate.Museum.Controller
         /// <param name="level"></param>
         public virtual void Load()
         {
-            if (pointObj == null)
-                PreloadAsync();
+            try
+            {
+                if (pointObj == null)
+                    PreloadAsync();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("加载模型错误：" + e.Message);
+                throw;
+            }
+      
 
         }
         public async Task PreloadAsync()
@@ -132,9 +145,13 @@ namespace HotUpdate.Museum.Controller
             _pointCutscene.SetGroupActorOfName(pointObj.name, pointObj);
 
             _pointCutscene?.PlaySection("Intro");
-            //查找管理器
-            LoadingModelManage loadingModelController = pointObj._GetComponent<LoadingModelManage>();
-            loadingModelController.Initialize(_pointCutscene);
+
+            functionControlBases = pointObj.GetComponentsInChildren<FunctionControlBase>(true);
+
+            foreach (var item in functionControlBases)
+            {
+                item.Initialize();
+            }
 
         }
 
@@ -147,6 +164,12 @@ namespace HotUpdate.Museum.Controller
         {
             if (pointObj != null)
             {
+
+                foreach (var item in functionControlBases)
+                {
+                    item.Clos();
+                }
+
                 GameObject.Destroy(pointObj);
                 pointObj = null;
             }

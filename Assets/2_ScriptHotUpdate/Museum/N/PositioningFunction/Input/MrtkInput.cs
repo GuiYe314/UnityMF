@@ -9,7 +9,7 @@ using UnityEngine;
 namespace HotUpdate.Museum.Input
 {
 
-    public class MrtkInput : ImportBase, IMixedRealityFocusHandler, IMixedRealityPointerHandler
+    public class MrtkInput : InputBase, IMixedRealityFocusHandler, IMixedRealityPointerHandler
     {
 
 

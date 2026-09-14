@@ -10,17 +10,21 @@ namespace HotUpdate.Museum.Function
 {
     public class FunctionControlBase : MonoBehaviour
     {
-        [SerializeField]
-        protected ImportBase importBase;
 
-        private void Start()
+
+
+        public virtual void Initialize()
         {
-            importBase.OnTrigger += Open;
-            importBase = importBase == null ? GetComponent<ImportBase>() : importBase;
+
         }
 
-        public virtual void Open(ImportRoutingSignal importRoutingSignal, GameObject obj)
+
+
+        public virtual void Open(FunctionDataContext functionBasesData)
         {
+
+
+
 
         }
 
@@ -34,24 +38,26 @@ namespace HotUpdate.Museum.Function
 
 
 
-    public class FunctionBasesData : IPoolable
+    public class FunctionDataContext : IPoolable
     {
 
-        public ImportRoutingSignal importRoutingSignal;
+        public ImportRoutingSignal inputRoutingSignal { get; protected set; }
 
-        public ObjState objState;
-        public bool objStateReversal;
+        public ObjState objState { get; protected set; }
+        public bool objStateReversal { get; set; }
 
-        public GameObject obj;
+        public GameObject obj { get; protected set; }
 
+        public FunctionEventName eventName { get; protected set; }
 
-        public static FunctionBasesData Acquire(GameObject obj, bool objStateReversal, ImportRoutingSignal importRoutingSignal, ObjState objState)
+        public static FunctionDataContext Acquire(GameObject obj, bool objStateReversal, ImportRoutingSignal importRoutingSignal, ObjState objState, FunctionEventName eventName)
         {
-            FunctionBasesData functionBasesData = ReferencePool.Acquire<FunctionBasesData>();
+            FunctionDataContext functionBasesData = ReferencePool.Acquire<FunctionDataContext>();
             functionBasesData.obj = obj;
             functionBasesData.objState = objState;
             functionBasesData.objStateReversal = objStateReversal;
-            functionBasesData.importRoutingSignal = importRoutingSignal;
+            functionBasesData.inputRoutingSignal = importRoutingSignal;
+            functionBasesData.eventName = eventName;
 
 
             return functionBasesData;
@@ -59,15 +65,14 @@ namespace HotUpdate.Museum.Function
 
 
 
-        public static FunctionBasesData Acquire(FunctionBasesData functionBasesDatas)
+        public static FunctionDataContext Acquire(FunctionDataContext functionBasesDatas)
         {
-            FunctionBasesData functionBasesData = ReferencePool.Acquire<FunctionBasesData>();
+            FunctionDataContext functionBasesData = ReferencePool.Acquire<FunctionDataContext>();
             functionBasesData.obj = functionBasesDatas.obj;
             functionBasesData.objState = functionBasesDatas.objState;
             functionBasesData.objStateReversal = functionBasesDatas.objStateReversal;
-            functionBasesData.importRoutingSignal = functionBasesDatas.importRoutingSignal;
-
-
+            functionBasesData.inputRoutingSignal = functionBasesDatas.inputRoutingSignal;
+            functionBasesData.eventName = functionBasesDatas.eventName;
             return functionBasesData;
         }
 
@@ -82,18 +87,20 @@ namespace HotUpdate.Museum.Function
 
         public void OnAcquire()
         {
-            importRoutingSignal = ImportRoutingSignal.None;
+            inputRoutingSignal = ImportRoutingSignal.None;
             objStateReversal = false;
             objState = ObjState.None;
+            eventName = FunctionEventName.None;
             obj = null;
         }
 
 
         public void OnRelease()
         {
-            importRoutingSignal = ImportRoutingSignal.None;
+            inputRoutingSignal = ImportRoutingSignal.None;
             objStateReversal = false;
             objState = ObjState.None;
+            eventName = FunctionEventName.None;
             obj = null;
 
         }
