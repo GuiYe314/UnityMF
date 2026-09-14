@@ -19,9 +19,9 @@
       "url": "https://package.openupm.com"
     },
     "com.tuyoogame.yooasset": {
-      "version": "file:D:/Software/YooAsset-3.0.5/YooAsset-3.0.5/Assets/YooAsset",
+      "version": "file:YooAsset",
       "depth": 0,
-      "source": "local",
+      "source": "embedded",
       "dependencies": {
         "com.unity.scriptablebuildpipeline": "1.21.25",
         "com.unity.modules.assetbundle": "1.0.0",

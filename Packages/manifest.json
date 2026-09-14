@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "com.code-philosophy.hybridclr": "https://gitee.com/focus-creative-games/hybridclr_unity.git",
-    "com.tuyoogame.yooasset": "file:D:/Software/YooAsset-3.0.5/YooAsset-3.0.5/Assets/YooAsset",
+    "com.ivanmurzak.unity.mcp": "0.90.0",
+    "com.tuyoogame.yooasset": "file:D:/Sof/Unity/插件/YooAsset-yoo3/YooAsset-yoo3/Assets/YooAsset",
     "com.unity.collab-proxy": "2.12.4",
     "com.unity.feature.development": "1.0.1",
     "com.unity.textmeshpro": "3.0.6",
@@ -39,8 +40,7 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.ivanmurzak.unity.mcp": "0.90.0"
+    "com.unity.modules.xr": "1.0.0"
   },
   "scopedRegistries": [
     {
